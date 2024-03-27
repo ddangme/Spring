@@ -2,11 +2,10 @@ package hello.Spring.discount;
 
 import hello.Spring.member.Grade;
 import hello.Spring.member.Member;
-import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 
-import static org.junit.jupiter.api.Assertions.*;
+import static org.assertj.core.api.Assertions.assertThat;
 
 class RateDiscountPolicyTest {
 
@@ -22,7 +21,7 @@ class RateDiscountPolicyTest {
         int discount = discountPolicy.discount(member, 10_000);
 
         // Then
-        Assertions.assertThat(discount).isEqualTo(1_000);
+        assertThat(discount).isEqualTo(1_000);
     }
 
     @DisplayName("VIP가 아닐 경우 할인이 적용되지 않아야 한다.")
@@ -35,7 +34,7 @@ class RateDiscountPolicyTest {
         int discount = discountPolicy.discount(member, 10_000);
 
         // Then
-        Assertions.assertThat(discount).isEqualTo(0);
+        assertThat(discount).isEqualTo(0);
     }
 
 }
