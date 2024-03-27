@@ -134,3 +134,16 @@ public class AppConfig {
   - ```AppConfig```은 구체 클래스를 선택한다. 애플리케이션이 어떻게 동작해야 할지 전체 구성을 책임진다.
   - 각각의 인터페이스는 담당하는 기능만 책임지면 된다.
   - ```OrderServiceImpl```은 기능을 실행하는 책임만 지면 된다.
+
+
+### 새로운 구조와 할인 정책 적용
+- AppConfig의 등장으로 애플리케이션이 크게 사용 영역과, 객체를 생성하고 구성(Configuration)하는 영역으로 분리되었다.
+- 사용, 구성의 분리
+  ![img.png](img/사용,%20구성의%20분리.png)
+- 할인 정책의 변경
+  ![img.png](img/할인%20정책의%20변경.png)
+- ```FixDiscountPolicy``` -> ```RateDiscountPolicy```로 변경해도 구성 영역만 영향을 받고, 사용 영역은 전혀 영향을 받지 않는다.
+- ```AppConfig```에서 할인 정책 역할을 담당하는 구현을 ```FixDiscountPolicy```에서 ```RateDiscountPolicy```객체로 변경한다.
+- 이제 할인 정책을 변경해도, 애플리케이션의 구성 역할을 담당하는 AppConfig만 변경하면 된다.
+- 클라이언트 코드인 ```OrderServiceImpl```를 포함해서 **사용 영역**의 어떤 코드도 변경할 필요가 없다.
+- **구성 영역**은 당연히 변경된다.
