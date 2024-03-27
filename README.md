@@ -19,11 +19,11 @@ Spring의 기본 원리 학습을 위한 프로젝트
 - 인터페이스를 만들고 구현체를 언제든지 바꿀 수 있도록 설계한다.
 
 ##  회원 도메인 설계
-![img.png](img/회원%20도메인%20협력%20관계.png)
+![img.png](note/img/회원%20도메인%20협력%20관계.png)
 
-![img.png](img/회원%20클래스%20다이어그램.png)
+![img.png](note/img/회원%20클래스%20다이어그램.png)
 
-![img.png](img/회원%20객체%20다이어그램.png)
+![img.png](note/img/회원%20객체%20다이어그램.png)
 
 - 회원 도메인 설계의 문제점
   - 다른 저장소로 변경할 때 OCP 원칙을 준수하고 있나?
@@ -32,30 +32,30 @@ Spring의 기본 원리 학습을 위한 프로젝트
 
 
 ## 주문과 할인 도메인 설계
-![img.png](img/주문%20도메인%20협력,%20역할,%20책임.png)
+![img.png](note/img/주문%20도메인%20협력,%20역할,%20책임.png)
 1. 주문 생성: 클라이언트는 주문 서비스에 주문 생성을 요청한다.
 2. 회원 조회: 할인을 위해서 회원 등급이 필요하기 때문에, 주문 서비스는 회원 저장소에서 회원을 조회한다.
 3. 할인 적용: 주문 서비스는 회원 등급에 따른 할인 여부를 할인 정책에 위임한다.
 4. 주문 결과 반환: 주문 서비스는 할인 결과를 포함한 주문 결과를 반환한다.
 
-![img.png](img/주문%20도메인%20전체.png)
+![img.png](note/img/주문%20도메인%20전체.png)
 - 역할과 구분을 분리해서 자유롭게 구현 객체를 조립할 수 있도록 설계되었다.
 따라서 회원 저장소와 할인 정책도 유연하게 변경할 수 있다.
 
-![img.png](img/주문%20도메인%20클래스%20다이어그램.png)
+![img.png](note/img/주문%20도메인%20클래스%20다이어그램.png)
 
-![img.png](img/주문%20도메인%20객체%20다이어그램1.png)
+![img.png](note/img/주문%20도메인%20객체%20다이어그램1.png)
 - 회원을 메모리에서 조회하고, 정액 할인 정책(고정 금액)을 지원해도 주문 서비스를 변경하지 않아도 된다.
 역할들의 협력관계를 그대로 재사용 할 수 있다.
 
-![img.png](img/주문%20도메인%20객체%20다이어그램2.png)
+![img.png](note/img/주문%20도메인%20객체%20다이어그램2.png)
 - 회원을 메모리가 아닌 실제 DB에서 조회하고, 정률 할인 정책(퍼센트)을 지원해도 주문 서비스를 변경하지 않아도 된다.
 협력 관계를 그대로 재사용 할 수 있다.
 
 
 ### 새로운 할인 정책 개발
 - 서비스 오픈 직전에, 할인 정책을 정액 할인이 아닌, 정률할인으로 변경한다.
-  ![img.png](img/RateDiscountPolicy%20추가.png)
+  ![img.png](note/img/RateDiscountPolicy%20추가.png)
 
 
 ### 새로운 할인 정책 적용과 문제점
@@ -78,9 +78,9 @@ Spring의 기본 원리 학습을 위한 프로젝트
       - 구체(구현) 클래스 : FixDiscountPolicy, RateDiscountPolicy
     - 지금 코드는 기능을 확장해서 변경하면, 클라이언트 코드에 영향을 준다. 따라서 OCP를 위반한다.
     - 기대했던 의존관계
-      ![img.png](img/기대했던%20의존관계.png)
+      ![img.png](note/img/기대했던%20의존관계.png)
     - 실제 의존관계
-      ![img.png](img/실제%20의존관계.png)
+      ![img.png](note/img/실제%20의존관계.png)
 
 - 문제 해결 방법
   - 클라이언트 코드인 OrderServiceImpl은 DiscoutPolicy의 인터페이스 뿐만 아니라 구체 클래스도 함께 의존한다.
@@ -88,7 +88,7 @@ Spring의 기본 원리 학습을 위한 프로젝트
   - DIP 위반 -> 추상에만 의존하도록 변경(인터페이스에만 의존)
   - DIP를 위반하지 않도록 인터페이스에만 의존하도록 의존관계를 변경하면 된다.
   - 🔥인터페이스에만 의존하도록 설계를 변경해보자.
-    ![img.png](img/변경된%20설계.png)
+    ![img.png](note/img/변경된%20설계.png)
     ```java
     private DiscountPolicy discountPolicy;
     ```
@@ -121,11 +121,11 @@ public class AppConfig {
 - AppConfig은 생성한 객체 인스턴스의 참조(레퍼런스)를 생성자를 통해 주입(연결)해준다.
   - MemberServiceImpl -> MemoryMemberRepository
   - OrderServiceImpl -> MemoryMemberRepository, FixDiscountPolicy
-  ![img.png](img/변경한%20클래스%20다이어그램.png)
+  ![img.png](note/img/변경한%20클래스%20다이어그램.png)
 - 객체의 생성과 연결은 ```AppConfig```가 담당한다.
 - DIP완성: ```MemberServiceImpl```은 ```MemberRepository```인 추상에만 의존하면 된다. 이제 구체 클래스를 몰라도 된다.
 - 관심사의 분리: 객체를 생성하고 연결하는 역할과 실행하는 역할이 명확히 분리되었다.
-  ![img.png](img/변경된%20회원%20객체%20인스턴스%20다이어그램.png)
+  ![img.png](note/img/변경된%20회원%20객체%20인스턴스%20다이어그램.png)
   - ```appConfig```객체는 ```memoryMemberRepository```객체를 생성하고 그 참조값을 ```memberServiceImpl```을 생성하면서 생성자로 전달한다.
   - 클라이언트인 ```memberServiceImpl``` 입장에서 보면 의존관계를 마치 외부에서 주입해주는 것과 같다고 해서 DI(Dependency Injection) 우리말로 의존 관계 주입 또는 위존성 주입이라고 한다.
 - 정리
@@ -139,9 +139,9 @@ public class AppConfig {
 ### 새로운 구조와 할인 정책 적용
 - AppConfig의 등장으로 애플리케이션이 크게 사용 영역과, 객체를 생성하고 구성(Configuration)하는 영역으로 분리되었다.
 - 사용, 구성의 분리
-  ![img.png](img/사용,%20구성의%20분리.png)
+  ![img.png](note/img/사용,%20구성의%20분리.png)
 - 할인 정책의 변경
-  ![img.png](img/할인%20정책의%20변경.png)
+  ![img.png](note/img/할인%20정책의%20변경.png)
 - ```FixDiscountPolicy``` -> ```RateDiscountPolicy```로 변경해도 구성 영역만 영향을 받고, 사용 영역은 전혀 영향을 받지 않는다.
 - ```AppConfig```에서 할인 정책 역할을 담당하는 구현을 ```FixDiscountPolicy```에서 ```RateDiscountPolicy```객체로 변경한다.
 - 이제 할인 정책을 변경해도, 애플리케이션의 구성 역할을 담당하는 AppConfig만 변경하면 된다.
