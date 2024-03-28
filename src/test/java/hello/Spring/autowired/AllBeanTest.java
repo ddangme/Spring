@@ -20,8 +20,7 @@ public class AllBeanTest {
         ApplicationContext ac = new AnnotationConfigApplicationContext(AutoAppConfig.class, DiscountService.class);
         DiscountService discountService = ac.getBean(DiscountService.class);
         Member member = new Member(1L, "userA", Grade.VIP);
-        int discountPrice = discountService.discount(member, 10000,
-                "fixDiscountPolicy");
+        int discountPrice = discountService.discount(member, 10000, "fixDiscountPolicy");
         assertThat(discountService).isInstanceOf(DiscountService.class);
         assertThat(discountPrice).isEqualTo(1000);
     }
@@ -30,8 +29,7 @@ public class AllBeanTest {
     static class DiscountService {
         private final Map<String, DiscountPolicy> policyMap;
         private final List<DiscountPolicy> policies;
-        public DiscountService(Map<String, DiscountPolicy> policyMap,
-                               List<DiscountPolicy> policies) {
+        public DiscountService(Map<String, DiscountPolicy> policyMap, List<DiscountPolicy> policies) {
             this.policyMap = policyMap;
             this.policies = policies;
             System.out.println("policyMap = " + policyMap);
@@ -42,5 +40,6 @@ public class AllBeanTest {
             System.out.println("discountCode = " + discountCode);
             System.out.println("discountPolicy = " + discountPolicy);
             return discountPolicy.discount(member, price);
-        } }
+        }
+    }
 }
